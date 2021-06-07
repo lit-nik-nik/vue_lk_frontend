@@ -21,4 +21,5 @@ yarn-error.log*
 *.sw?
 
 /src/service/config.json
+/src/storege/sharedStore.js
 babel.config.js
