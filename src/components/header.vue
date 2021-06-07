@@ -8,7 +8,7 @@
       </v-toolbar-title>
 
       <v-toolbar-title class="header-info logo text-center">
-        <a href='https://massiv-yug.ru' target='_blank' class="v-btn">
+        <a :href='site' target='_blank' class="v-btn">
           <v-img
               contain
               :src="logo"
@@ -35,6 +35,7 @@
 <script>
 import {globalStore} from "@/storege/sharedStore";
 import logoPNG from '../assets/logo.png';
+import {site} from '../service/config.json';
 
 export default {
     name: 'Header',
@@ -42,6 +43,7 @@ export default {
       return {
         store: globalStore,
         logo: logoPNG,
+        site: site,
         items_menu: [
           {
             id: 1,

@@ -24,3 +24,6 @@ yarn-error.log*
 /src/storege
 /src/storege/sharedStore.js
 babel.config.js
+/public/favicon.png
+/src/assets/logo.png
+
