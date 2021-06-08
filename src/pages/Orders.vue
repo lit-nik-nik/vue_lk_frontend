@@ -52,36 +52,44 @@
           <div v-if="!item.date_out && item.status_description !== 'Отгружен полностью' && item.status_description !== 'Закрыт'">
             <div v-if="item.delivery_city.city">
               <v-btn
-                  class="ma-0"
-                  x-small
-                  plain
+                  class="ma-0 city"
+                  small
+                  text
                   color="black"
                   @click="openModal(item)">
-                {{item.delivery_city.city}} <v-icon color="warning">mdi-pencil</v-icon>
+                {{item.delivery_city.city}} <v-icon color="warning" class="ml-2">mdi-pencil</v-icon>
               </v-btn>
             </div>
             <div v-else>
               <v-btn
-                class="ma-0"
-                x-small
-                plain
+                class="ma-0 city"
+                small
+                text
                 color="primary"
                 @click="openModal(item)">
                   <v-icon>mdi-plus</v-icon>Выбрать город
               </v-btn>
             </div>
-            <DeliveryCity
-                :random="random"
-                :active="item.delivery_city.dialog"
-                :order="item.itm_ordernum"
-                :city="item.delivery_city.city"
-                :user="user"
-                :delivery_city="delivery_city"
-                @disabled="item.delivery_city.dialog = $event"
-                @addCity="item.delivery_city.city = $event"
-                :update="componentKey"
-                @update="componentKey = $event"/>
           </div>
+          <div v-else>
+            <div v-if="item.delivery_city.city">
+              <div
+                  class="text-center text-overline">
+                {{item.delivery_city.city}}
+              </div>
+            </div>
+          </div>
+          <DeliveryCity
+              :random="random"
+              :active="item.delivery_city.dialog"
+              :order="item.itm_ordernum"
+              :city="item.delivery_city.city"
+              :user="user"
+              :delivery_city="delivery_city"
+              @disabled="item.delivery_city.dialog = $event"
+              @addCity="item.delivery_city.city = $event"
+              :update="componentKey"
+              @update="componentKey = $event"/>
         </template>
 
         <template v-slot:top>
@@ -91,14 +99,14 @@
             </v-container>
 
             <v-container fluid>
-              <div class="row">
+              <div class="row mt-3">
                 <div
                     class="col-sm py-1"
                     v-for="item in filters"
                     :class="item.display"
                     :key="item.id">
                   <v-text-field
-                      v-if="item.id === 12 || item.id === 13"
+                      v-if="item.id === 12"
                       v-model="item.model"
                       type="text"
                       :label="item.label"
@@ -109,9 +117,11 @@
                       v-model="item.model"
                       :items='item.select'
                       :label="item.label"
+                      dense
                   ></v-select>
                   <v-text-field
                       v-else
+                      dense
                       v-model="item.model"
                       type="text"
                       :label="item.label"
@@ -232,6 +242,7 @@ export default {
           id: 13,
           model: '',
           label: 'Город доставки',
+          select: [''],
           display: ''
         }
       },
@@ -257,7 +268,8 @@ export default {
         date_out,
         box_pack,
         box_out,
-        driver_name
+        driver_name,
+        delivery_city
       } = this.filters;
       return [
         {
@@ -360,7 +372,13 @@ export default {
           },
         },
         {id: 12, text: 'Файл заказа', value: 'orders_files', width: '8.3%',},
-        {id: 13, text: 'Город доставки', value: 'delivery_city', width: '8.3%'}
+        {id: 13, text: 'Город доставки', value: 'delivery_city', width: '8.3%',
+          filter: value => {
+            if (!delivery_city.model) return true;
+
+            return value.city === delivery_city.model;
+          },
+        }
       ]
     },
   },
@@ -466,8 +484,9 @@ export default {
     },
 
     addCity(orders, cities) {
-      orders.map(order => {
-        cities.forEach(city => {
+      cities.forEach(city => {
+        this.filters.delivery_city.select.push(city.delivery_city);
+        orders.map(order => {
           if (city.order_name === order.itm_ordernum) {
             order.delivery_city.city = city.delivery_city;
           }
@@ -488,6 +507,10 @@ export default {
   width: 250px;
   margin-left: auto;
   margin-right: 0;
+}
+
+.city {
+  width: 100%;
 }
 
 .container .v-sheet {

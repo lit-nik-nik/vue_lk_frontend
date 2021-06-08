@@ -10,7 +10,15 @@
           :value="addCity"
           @input="change"
       >
-        <v-icon v-if="addCity" slot="append" color="green" @click="saveCity(addCity, indexCity)">mdi-check-bold</v-icon>
+        <v-btn
+            v-if="addCity"
+            text
+            small
+            slot="append"
+            color="green"
+            @click="saveCity(addCity, indexCity)">
+          Добавить <v-icon>mdi-check</v-icon>
+        </v-btn>
       </v-text-field>
 
       <v-list-item-group>
